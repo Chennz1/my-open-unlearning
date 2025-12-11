@@ -1,0 +1,36 @@
+defaults:
+  - finetune
+
+handler: SteerUnlearnTrainer
+method_args:
+  # 目标层索引 (针对steering的层)
+  target_layer_index: 7
+  
+  # 损失权重
+  retain_weight: 1.0  # 保留损失权重
+  forget_weight: 2.0  # 遗忘损失权重
+
+# Trainer训练参数
+args:
+  per_device_train_batch_size: 4
+  per_device_eval_batch_size: 16
+  gradient_accumulation_steps: 8
+  learning_rate: 1e-3
+  num_train_epochs: 10
+  warmup_epochs: 1.0
+  weight_decay: 0.01
+  save_strategy: 'no'
+  save_only_model: True
+  # Tensorboard logging configuration
+  logging_steps: 5  # 每步都记录loss
+  # logging_strategy: steps
+  report_to: tensorboard
+  logging_dir: ${trainer.args.output_dir}/logs
+  # optim: adamw_torch
+  # save_strategy: 'no'
+  # save_only_model: True
+  # do_train: True
+  do_eval: False
+  eval_on_start: False
+  # eval_strategy: epoch
+  seed: 0

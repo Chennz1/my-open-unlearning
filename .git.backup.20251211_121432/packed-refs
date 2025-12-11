@@ -1,0 +1,4 @@
+# pack-refs with: peeled fully-peeled sorted 
+f271982fa59fc9be5d00e5dceab476a684fde0c4 refs/remotes/origin/gh-pages
+b71de54c179408d447bc383c86fd1fafcc99dc14 refs/remotes/origin/main
+05d294eba5cf4676474e27ef94987514ce8160b5 refs/remotes/origin/tofu_deprecated

@@ -1,0 +1,55 @@
+# @package _global_
+
+defaults:
+  - override /model: Llama-2-7b-hf
+  - override /trainer: RAD
+  - override /data: unlearn
+  - override /data/datasets@data.forget: MUSE_forget
+  - override /data/datasets@data.retain: MUSE_retain
+  - override /eval: muse
+
+data_split: News
+forget_split: forget
+retain_split: retain1
+retain_logs_path: null
+
+model:
+  model_args:
+    pretrained_model_name_or_path: muse-bench/MUSE-${data_split}_target
+
+data:
+  anchor: forget
+  forget:
+    MUSE_forget: 
+      args:
+        hf_args:
+          split: ${forget_split}
+          path: muse-bench/MUSE-${data_split}
+  retain:
+    MUSE_retain:
+      args:
+        hf_args:
+          split: ${retain_split}
+          path: muse-bench/MUSE-${data_split}
+
+eval:
+  muse:
+    data_split: ${data_split}
+    retain_logs_path: ${retain_logs_path}
+
+trainer:
+  args:
+    warmup_epochs: 1.0
+    learning_rate: 1e-5
+    weight_decay: 0.01
+    num_train_epochs: 5
+  method_args:
+    alpha: 1.0        # Standard weight for forget loss
+    beta: 0.4         # Moderate adaptation for MUSE
+    gamma: 1.2        # Higher retention weight for MUSE
+    module_dim: 128   # Standard adaptation modules
+    num_layers: 2     # Fewer layers for efficiency
+    retain_loss_type: NLL  # Use NLL for MUSE
+    adaptation_steps: 8    # Balanced adaptation frequency
+
+task_name: muse_rad_unlearn

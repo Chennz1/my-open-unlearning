@@ -1,0 +1,10 @@
+TOFU_QA_retain_mimic:
+  handler: QADataset
+  args:
+    hf_args:
+      name: "retain90_mimic"
+      split: "train"
+      path: "/home/cnz/.cache/huggingface/hub/datasets--locuslab--TOFU/snapshots/324592d84ae4f482ac7249b9285c2ecdb53e3a68"
+    question_key: "question"
+    answer_key: "answer"
+    max_length: 512

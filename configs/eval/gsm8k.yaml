@@ -1,0 +1,10 @@
+# GSM-8K Evaluation Configuration
+gsm8k:
+  handler: GSM8KEvaluator
+  overwrite: false
+  output_dir: ${paths.output_dir}
+  max_new_tokens: 512
+  batch_size: 4
+  subset: "test"  # "train" or "test"
+  num_samples: null  # null = evaluate on all samples
+  metrics: {}

@@ -1,0 +1,12 @@
+defaults:
+  - finetune
+
+handler: RAD
+method_args:
+  alpha: 1.0          # Weight for forget loss
+  beta: 0.5           # Weight for adaptation loss  
+  gamma: 1.0          # Weight for retain loss
+  module_dim: 128     # Dimension of adaptation modules
+  num_layers: 2       # Number of layers in adaptation modules
+  retain_loss_type: NLL  # Type of retain loss (NLL or KL)
+  adaptation_steps: 10   # Frequency of adaptation steps

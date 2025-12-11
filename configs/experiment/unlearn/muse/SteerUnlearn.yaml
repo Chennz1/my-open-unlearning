@@ -1,0 +1,79 @@
+# @package _global_
+
+defaults:
+  - override /model: Llama-2-7b-hf
+  - override /trainer: SteerUnlearn
+  - override /data: unlearn
+  - override /eval: muse
+
+# 数据分割配置
+data_split: News
+forget_split: forget
+retain_split: retain1
+retain_logs_path: null
+
+# 模型配置
+model:
+  model_args:
+    pretrained_model_name_or_path: "meta-llama/Llama-2-7b-hf"
+
+# 评估配置
+eval:
+  muse:
+    data_split: ${data_split}
+    retain_logs_path: ${retain_logs_path}
+
+# 数据配置  
+data:
+  anchor: forget
+  forget:
+    MUSE_QA:
+      args:
+        split: ${data_split}
+        subset: ${forget_split}
+  retain:
+    MUSE_QA:
+      args:
+        split: ${data_split}
+        subset: ${retain_split}
+
+# Steering Unlearn 训练器配置
+trainer:
+  # 基础训练参数
+  args:
+    warmup_epochs: 1.0
+    learning_rate: 2e-5
+    weight_decay: 0.01
+    num_train_epochs: 5
+    per_device_train_batch_size: 2
+    gradient_accumulation_steps: 8
+    save_strategy: 'epoch'
+    save_steps: 1
+    eval_strategy: 'epoch'
+    logging_steps: 5
+    gradient_checkpointing: true
+    
+  # Steering方法特定参数
+  method_args:
+    # Steering vector路径 (需要为Llama-2-7b准备steering vector)
+    steering_vector_path: "/home/cnz/project/open-unlearning/vectors/Llama-2-7b-hf/direction.pt"
+    
+    # 目标层索引 (Llama-2-7b有32层，选择中间层)
+    target_layer_index: 15
+    
+    # 控制器类型
+    controller_type: "mlp_adaptive"
+    
+    # 控制器配置 (Llama-2-7b配置)
+    controller_config:
+      hidden_size: 4096  # Llama-2-7b的hidden_size
+      vector_size: 4096  
+      temperature: 1.0
+      num_layers: 3
+    
+    # 损失权重
+    retain_weight: 1.0   
+    forget_weight: 1.0   
+
+# 任务名称
+task_name: ???

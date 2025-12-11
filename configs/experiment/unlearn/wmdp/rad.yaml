@@ -1,0 +1,47 @@
+# @package _global_
+
+defaults:
+  - override /model: zephyr-7b-beta
+  - override /trainer: RAD
+  - override /data: unlearn
+  - override /data/datasets@data.forget: WMDP_forget
+  - override /data/datasets@data.retain: WMDP_retain
+  - override /eval: lm_eval
+
+data_split: cyber
+
+data:
+  anchor: forget
+  forget:
+    WMDP_forget: 
+      args:
+        hf_args:
+          data_files: data/wmdp/wmdp-corpora/${data_split}-forget-corpus.jsonl
+  retain:
+    WMDP_retain:
+      args:
+        hf_args:
+          data_files: data/wmdp/wmdp-corpora/${data_split}-retain-corpus.jsonl
+
+eval:
+  lm_eval:
+    tasks:
+      - wmdp_${data_split}
+      - mmlu
+
+trainer:
+  args:
+    warmup_epochs: 0.5
+    learning_rate: 5e-6  # Lower learning rate for safety-critical domain
+    weight_decay: 0.02
+    num_train_epochs: 3
+  method_args:
+    alpha: 2.0        # Higher forget weight for hazardous content
+    beta: 0.6         # Strong adaptation for safety
+    gamma: 1.5        # Strong retention for general knowledge
+    module_dim: 512   # Larger modules for complex safety patterns
+    num_layers: 4     # More layers for sophisticated adaptation
+    retain_loss_type: KL  # KL for better knowledge preservation
+    adaptation_steps: 3   # Frequent adaptation for safety
+
+task_name: wmdp_rad_unlearn
