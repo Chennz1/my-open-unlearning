@@ -5,23 +5,24 @@ export MASTER_PORT=$(python -c "import socket; s=socket.socket(); s.bind(('', 0)
 echo "Master Port: $MASTER_PORT"
 
 models=(
-    "Llama-3.2-1B-Instruct"
+    "Llama-2-7b-chat-hf"
+    # "Llama-3.2-1B-Instruct"
     # "Llama-3.2-3B-Instruct"
     # "Llama-3.1-8B-Instruct"
 )
 trainers_experiments=(
-    # "GradAscent unlearn/tofu/default.yaml"
-    # "GradDiff unlearn/tofu/default.yaml"
-    # "NPO unlearn/tofu/default.yaml"
+    "GradAscent unlearn/tofu/default.yaml"
+    "GradDiff unlearn/tofu/default.yaml"
+    "NPO unlearn/tofu/default.yaml"
     # "DPO unlearn/tofu/idk.yaml"
-    # "RMU  unlearn/tofu/default.yaml"
+    "RMU  unlearn/tofu/default.yaml"
     # "SteerUnlearn unlearn/tofu/steer_unlearn.yaml"
-    "Cancelled unlearn/tofu/default.yaml"
+    # "Cancelled unlearn/tofu/default.yaml"
 )
 splits=(
-    "forget01 holdout01 retain99"
-    # "forget05 holdout05 retain95"
-    # "forget10 holdout10 retain90"
+    # "forget01 holdout01 retain99"
+    "forget05 holdout05 retain95"
+    "forget10 holdout10 retain90"
 )
 
 

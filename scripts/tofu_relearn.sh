@@ -1,4 +1,4 @@
-#!/bin/bash
+9#!/bin/bash
 
 export MASTER_PORT=$(python -c "import socket; s=socket.socket(); s.bind(('', 0)); print(s.getsockname()[1]); s.close()")
 echo "Master Port: $MASTER_PORT"
@@ -25,9 +25,10 @@ splits=(
 ########################################### FORGET Finetuned TOFU ######################################################
 ########################################################################################################################
 
-# model_path="vectors/test_model_10"
-model_path="/home/cnz/project/open-unlearning/saves/unlearn/tofu_Llama-3.2-1B-Instruct_forget10_NPO"
-method="NPO"
+# model_path="vectors/test_model_05"
+# model_path="/home/cnz/project/open-unlearning/saves/unlearn/tofu_Llama-3.2-1B-Instruct_forget05_NPO"
+model_path="/home/cnz/.cache/huggingface/hub/models--open-unlearning--unlearn_tofu_Llama-3.2-1B-Instruct_forget10_SimNPO_lr5e-05_b3.5_a1_d1_g0.25_ep5/snapshots/6e4236b559722f40cb76ba0584ee1ee4a3ef1b73"
+method="SimNPO"
 
 for split in "${splits[@]}"; do
     forget_split=$(echo $split | cut -d' ' -f1)

@@ -52,7 +52,7 @@ for split in "${splits[@]}"; do
         model=${model} \
         data/datasets@data.train=TOFU_QA_retain \
         data.train.TOFU_QA_retain.args.hf_args.name=${retain_split} \
-        data.train.TOFU_QA_retain.args.hf_args.split="train\[:${trim_count}\]" \
+        data.train.TOFU_QA_retain.args.hf_args.split="train\[:${trim_ count}\]" \
         trainer.args.per_device_train_batch_size=${per_device_train_batch_size} \
         trainer.args.ddp_find_unused_parameters=true \
         trainer.args.num_train_epochs=10 \

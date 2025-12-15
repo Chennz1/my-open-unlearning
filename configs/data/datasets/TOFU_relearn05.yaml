@@ -1,0 +1,12 @@
+TOFU_relearn10:
+  handler: QADataset
+  args:
+    hf_args:
+      path: "json"
+      split: "train"
+      data_files:
+        - "/home/cnz/.cache/huggingface/hub/datasets--locuslab--TOFU/snapshots/324592d84ae4f482ac7249b9285c2ecdb53e3a68/relearn05.json"
+    question_key: "question"
+    answer_key: "answer"
+    max_length: 512
+    

@@ -63,7 +63,8 @@ gradient_accumulation_steps=8
 # done
 
 # path="vectors/test_model_10"
-path="saves/finetune/tofu_Llama-3.2-1B-Instruct_forget10_NPO_relearn/checkpoint-2"
+path="/home/cnz/project/open-unlearning/saves/unlearn/tofu_Llama-3.2-1B-Instruct_forget10_SimNPO"
+# path="/home/cnz/.cache/huggingface/hub/models--open-unlearning--unlearn_tofu_Llama-3.2-1B-Instruct_forget10_SimNPO_lr5e-05_b3.5_a1_d1_g0.25_ep5/snapshots/6e4236b559722f40cb76ba0584ee1ee4a3ef1b73"
 
 for split in "${splits[@]}"; do
     forget_split=$(echo $split | cut -d' ' -f1)

@@ -10,10 +10,10 @@ models=(
     # "Llama-3.1-8B-Instruct"
 )
 trainers_experiments=(
-    "NPO unlearn/tofu/default.yaml"
+    # "NPO unlearn/tofu/default.yaml"
     # "GradDiff unlearn/tofu/default.yaml"
     # "GradAscent unlearn/tofu/default.yaml"
-    # "SimNPO unlearn/tofu/default.yaml"
+    "SimNPO unlearn/tofu/default.yaml"
     # "DPO unlearn/tofu/idk.yaml"
     # "RMU  unlearn/tofu/default.yaml"
     # "SatImp  unlearn/tofu/default.yaml"
@@ -21,8 +21,8 @@ trainers_experiments=(
 )
 splits=(
     # "forget01 holdout01 retain99"
-    "forget05 holdout05 retain95"
-    # "forget10 holdout10 retain90"
+    # "forget05 holdout05 retain95"
+    "forget10 holdout10 retain90"
 )
 
 
@@ -64,9 +64,9 @@ for split in "${splits[@]}"; do
             trainer.args.gradient_accumulation_steps=$gradient_accumulation_steps \
             trainer.args.ddp_find_unused_parameters=true \
             trainer.args.gradient_checkpointing=true  \
-            trainer.args.num_train_epochs=10 \
-            trainer.args.save_strategy="steps" \
-            trainer.args.save_steps=0.5 
+            trainer.args.num_train_epochs=5 \
+            trainer.args.save_strategy="no" 
+            # trainer.args.save_steps=0.5 
             # trainer.args.save_steps=24 \
 
             # # Eval

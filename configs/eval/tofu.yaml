@@ -13,7 +13,7 @@ defaults: # include all defined metrics files
     - privleak
     - extraction_strength
     - forget_Truth_Ratio
-    # - exact_memorization
+    - exact_memorization
     # - mia_min_k_plus_plus
     # - mia_min_k
     # - mia_loss
