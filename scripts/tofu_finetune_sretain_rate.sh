@@ -7,8 +7,9 @@ echo "Master Port: $MASTER_PORT"
 models=(
     # "Llama-3.2-1B-base"
     # "Llama-3.2-1B-Instruct"
-    "Llama-3.2-3B-Instruct"
+    # "Llama-3.2-3B-Instruct"
     # "Llama-3.1-8B-Instruct"
+    "Llama-2-7b-chat-hf"
 )
 per_device_train_batch_size=4 # Effective batch size 32 on two GPUs with gradent_accumulation_steps=8
 
@@ -43,7 +44,7 @@ for split in "${splits[@]}"; do
     trim_count=$(( tofu_trim_base * (100 - retain_pct) / 100 ))
     echo "Split=$split -> retain%=$retain_pct => trim_count=$trim_count"
     
-    for rate in 500 ; do
+    for rate in 20 50 150 200 500 ; do
         echo "Mimic rate: $rate"
         trim_count_act=$(( trim_count * rate / 100 ))
 
@@ -58,9 +59,12 @@ for split in "${splits[@]}"; do
             data/datasets@data.train=TOFU_QA_retain \
             data.train.TOFU_QA_retain.args.hf_args.name=${retain_split} \
             data.train.TOFU_QA_retain.args.hf_args.split="train\[:${trim_count_act}\]" \
+            model.model_args.pretrained_model_name_or_path=/cnz/data/ms-home/Llama-2-7b-chat-hf \
             trainer.args.per_device_train_batch_size=${per_device_train_batch_size} \
+            trainer.args.gradient_accumulation_steps=2 \
             trainer.args.ddp_find_unused_parameters=true \
             trainer.args.gradient_checkpointing=true \
+            trainer.args.num_train_epochs=5 \
             trainer.args.save_strategy=no 
 
 

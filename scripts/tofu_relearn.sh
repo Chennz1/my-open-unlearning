@@ -6,10 +6,11 @@ echo "Master Port: $MASTER_PORT"
 
 models=(
     # "Llama-3.2-1B-base"
-    "Llama-3.2-1B-Instruct"
+    # "Llama-3.2-1B-Instruct"
     # "Llama-3.2-3B-Instruct"
     # "Llama-3.1-8B-Instruct"
     # "phi-1_5"
+    "Llama-2-7b-chat-hf"
 )
 per_device_train_batch_size=4 # Effective batch size 32 on two GPUs with gradent_accumulation_steps=8
 
@@ -26,8 +27,9 @@ splits=(
 ########################################################################################################################
 
 # model_path="vectors/test_model_10"
-model_path="/home/cnz/project/open-unlearning/saves/unlearn/tofu_Llama-3.2-1B-Instruct_forget10_NPO"
-method="NPO"
+model_path="/cnz/data/hf-home/hub/models--open-unlearning--tofu_Llama-2-7b-chat-hf_retain90/snapshots/fbcc88562586716f1f8b6aba466acceaf5af16d2"
+# method="SimNPO"
+method="retrain"
 
 for split in "${splits[@]}"; do
     forget_split=$(echo $split | cut -d' ' -f1)
@@ -42,6 +44,7 @@ for split in "${splits[@]}"; do
         model.model_args.pretrained_model_name_or_path=${model_path} \
         data/datasets@data.train=TOFU_relearn10 \
         trainer.args.per_device_train_batch_size=4 \
+        trainer.args.gradient_accumulation_steps=4 \
         trainer.args.ddp_find_unused_parameters=true \
         trainer.args.gradient_checkpointing=true \
 

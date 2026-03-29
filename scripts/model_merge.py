@@ -13,37 +13,41 @@ def parse_args():
     parser.add_argument(
         "--tokenizer_path",
         type=str,
-        default="/home/cnz/.cache/huggingface/hub/Llama-3___2-1B-Instruct",
+        default="/cnz/data/ms-home/Llama-3___2-1B-Instruct",
+        # default="/cnz/data/ms-home/Llama-2-7b-chat-hf",
         help="Path to tokenizer"
     )
     parser.add_argument(
         "--orig_model_path",
         type=str,
-        default="/home/cnz/.cache/modelscope/hub/models/LLM-Research/Llama-3.2-1B",
+        default="/cnz/data/ms-home/Llama-3___2-1B-Instruct",
+        # default="/cnz/data/ms-home/Llama-2-7b-chat-hf",
         help="Path to original model"
     )
     parser.add_argument(
         "--ft_model_path",
         type=str,
-        default="/home/cnz/.cache/huggingface/hub/models--open-unlearning--tofu_Llama-3.2-1B-Instruct_full/snapshots/88e31200b97e4c0c04ae0d2f0b591f427046d192",
+        default="/root/.cache/huggingface/hub/models--open-unlearning--tofu_Llama-3.2-1B-Instruct_full/snapshots/88e31200b97e4c0c04ae0d2f0b591f427046d192",
+        # default="/cnz/data/project/my-open-unlearning/saves/finetune/tofu_Llama-2-7b-chat-hf_full",
         help="Path to fine-tuned model"
     )
     parser.add_argument(
         "--forget_path",
         type=str,
-        default="/home/cnz/project/open-unlearning/saves/finetune/tofu_Llama-3.2-1B-Instruct_forget10",
+        default="/cnz/data/project/my-open-unlearning/saves/finetune/tofu_Llama-3.2-1B-Instruct_forget05_epoch10",
         help="Path to forget model"
     )
     parser.add_argument(
         "--retain_mimic_path",
         type=str,
-        default="/home/cnz/project/open-unlearning/saves/finetune/tofu_Llama-3.2-1B-Instruct_retain90_mimic",
+        default="/cnz/data/project/my-open-unlearning/saves/finetune/tofu_Llama-3.2-1B-Instruct_retain95_mimic_epoch10",
+        # default="/cnz/data/project/my-open-unlearning/saves/finetune/tofu_Llama-2-7b-chat-hf_retain90_mimic",
         help="Path to retain mimic model"
     )
     parser.add_argument(
         "--save_path",
         type=str,
-        default="/home/cnz/project/open-unlearning/vectors/test_model_10",
+        default="/cnz/data/project/my-open-unlearning/saves/unlearn/test_model_05_epoch10",
         help="Path to save merged model"
     )
     

@@ -2,7 +2,7 @@ import hydra
 from omegaconf import DictConfig
 
 from trainer.utils import seed_everything
-from model import get_model
+from model import get_model_eval, get_model
 from evals import get_evaluators
 from omegaconf import OmegaConf
 
@@ -13,13 +13,13 @@ def main(cfg: DictConfig):
         cfg (DictConfig): Config to train
     """
     import json
-    print(json.dumps(OmegaConf.to_object(cfg), indent=4))
+    # print(json.dumps(OmegaConf.to_object(cfg), indent=4))
     seed_everything(cfg.seed)
     model_cfg = cfg.model
     template_args = model_cfg.template_args
     assert model_cfg is not None, "Invalid model yaml passed in train config."
     print(OmegaConf.to_yaml(model_cfg))
-    model, tokenizer = get_model(model_cfg)
+    model, tokenizer = get_model_eval(model_cfg)
 
     eval_cfgs = cfg.eval
     evaluators = get_evaluators(eval_cfgs)

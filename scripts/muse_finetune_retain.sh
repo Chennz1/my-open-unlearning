@@ -8,7 +8,7 @@ models=(
     # "Llama-2-13b-hf"
 )
 per_device_train_batch_size=4
-gradient_accumulation_steps=4
+gradient_accumulation_steps=2
 
 data_splits=(
     "News"
@@ -23,7 +23,7 @@ for data_split in "${data_splits[@]}"; do
     dataset_path="muse-bench/MUSE-${data_split}"
 
     for model in "${models[@]}"; do
-        task_name=muse_${model}_${data_split}_retain1
+        task_name=muse_${model}_${data_split}_retain1_e10
 
         CUDA_VISIBLE_DEVICES=0,1 accelerate launch --config_file configs/accelerate/default_config.yaml --main_process_port $MASTER_PORT \
         src/train.py experiment=finetune/muse/default.yaml \
@@ -33,11 +33,13 @@ for data_split in "${data_splits[@]}"; do
         data/datasets@data.train=MUSE_retain \
         data.train.MUSE_retain.args.hf_args.path=${dataset_path} \
         data.train.MUSE_retain.args.hf_args.split="retain1\[:889\]" \
+        model.model_args.pretrained_model_name_or_path=/cnz/data/ms-home/Llama-2-7b-hf/ \
         trainer.args.per_device_train_batch_size=${per_device_train_batch_size} \
         trainer.args.gradient_accumulation_steps=${gradient_accumulation_steps} \
         trainer.args.ddp_find_unused_parameters=true \
         trainer.args.gradient_checkpointing=true \
-        trainer.args.num_train_epochs=10
+        trainer.args.num_train_epochs=10 \
+        trainer.args.save_strategy=no
     done
 
 done

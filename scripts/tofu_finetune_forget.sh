@@ -9,15 +9,18 @@ models=(
     # "Llama-3.2-1B-Instruct"
     # "Llama-3.2-3B-Instruct"
     # "Llama-3.1-8B-Instruct"
-    "phi-1_5"
+    # "phi-1_5"
+    "Llama-2-7b-chat-hf"
 )
 per_device_train_batch_size=4 # Effective batch size 32 on two GPUs with gradent_accumulation_steps=8
 
 splits=(
     # "forget01 holdout01 retain99"
-    # "forget05 holdout05 retain95"
-    "forget10 holdout10 retain90"
+    "forget05 holdout05 retain95"
+    # "forget10 holdout10 retain90"
 )
+
+epoch=10
 
 
 
@@ -33,13 +36,16 @@ for split in "${splits[@]}"; do
     for model in "${models[@]}"; do
         CUDA_VISIBLE_DEVICES=0,1 accelerate launch --config_file configs/accelerate/default_config.yaml --main_process_port $MASTER_PORT \
         src/train.py experiment=finetune/tofu/default.yaml \
-        task_name=tofu_${model}_${forget_split} \
+        task_name=tofu_${model}_${forget_split}_epoch${epoch} \
         model=${model} \
         data/datasets@data.train=TOFU_QA_forget \
         data.train.TOFU_QA_forget.args.hf_args.name=${forget_split} \
+        model.model_args.pretrained_model_name_or_path=/cnz/data/ms-home/Llama-2-7b-chat-hf \
+        trainer.args.learning_rate=1e-5 \
         trainer.args.per_device_train_batch_size=4 \
+        trainer.args.gradient_accumulation_steps=2 \
         trainer.args.ddp_find_unused_parameters=true \
-        trainer.args.num_train_epochs=5 \
+        trainer.args.num_train_epochs=${epoch} \
         trainer.args.gradient_checkpointing=true \
         trainer.args.save_strategy=no
 

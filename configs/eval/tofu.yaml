@@ -12,8 +12,9 @@ defaults: # include all defined metrics files
     - model_utility # populated in the metrics key as metrics.model_utility
     - privleak
     - extraction_strength
+    - extraction_strength_retain
     - forget_Truth_Ratio
-    # - exact_memorization
+    - exact_memorization
     # - mia_min_k_plus_plus
     # - mia_min_k
     # - mia_loss

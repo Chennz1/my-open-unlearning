@@ -17,5 +17,8 @@ eval:
     forget_split: ${forget_split}
     holdout_split: ${holdout_split}
     retain_logs_path: ${retain_logs_path}
+  # lm_eval:
+  #   tasks:
+  #     - mmlu
 
 task_name: ???

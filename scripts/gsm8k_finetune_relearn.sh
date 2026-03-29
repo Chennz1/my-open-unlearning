@@ -8,10 +8,11 @@ echo "Master Port: $MASTER_PORT"
 
 # Model configurations
 models=(
-    "Llama-3.2-1B-Instruct"
+    # "Llama-3.2-1B-Instruct"
     # "Llama-3.2-3B-Instruct"
     # "Llama-3.1-8B-Instruct"
     # "phi-1_5"
+    "Llama-2-7b-chat-hf"
 )
 
 # Training hyperparameters
@@ -25,7 +26,8 @@ num_epochs=5
 ########################################################################################################################
 
 # model_path="saves/unlearn/tofu_Llama-3.2-1B-Instruct_forget10_NPO"
-model_path="vectors/test_model_10"
+model_path="/cnz/data/project/my-open-unlearning/saves/unlearn/tofu_Llama-2-7b-chat-hf_forget10_SimNPO_beta2.0_gamma0.2_epoch5"
+method="SimNPO"
 
 
 for model in "${models[@]}"; do
@@ -37,7 +39,7 @@ for model in "${models[@]}"; do
         --config_file configs/accelerate/default_config.yaml \
         --main_process_port $MASTER_PORT \
         src/train.py experiment=finetune/gsm8k/default.yaml \
-        task_name=gsm8k_${model}_relearn \
+        task_name=gsm8k_${model}_${method}_relearn \
         model=${model} \
         data/datasets@data.train=GSM8K_train \
         data/datasets@data.eval=GSM8K_test \

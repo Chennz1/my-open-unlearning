@@ -5,7 +5,7 @@ TOFU_relearn10:
       path: "json"
       split: "train"
       data_files:
-        - "/home/cnz/.cache/huggingface/hub/datasets--locuslab--TOFU/snapshots/324592d84ae4f482ac7249b9285c2ecdb53e3a68/relearn10.json"
+        - "/cnz/data/project/my-open-unlearning/data/relearn10.json"
     question_key: "question"
     answer_key: "answer"
     max_length: 512

@@ -5,9 +5,11 @@ export MASTER_PORT=$(python -c "import socket; s=socket.socket(); s.bind(('', 0)
 echo "Master Port: $MASTER_PORT"
 
 models=(
-    "Llama-3.2-1B-Instruct"
+    # "phi-1_5"
+    # "Llama-3.2-1B-Instruct"
     # "Llama-3.2-3B-Instruct"
     # "Llama-3.1-8B-Instruct"
+    "Llama-2-7b-chat-hf"
 )
 trainers_experiments=(
     # "GradAscent unlearn/tofu/default.yaml"
@@ -63,7 +65,7 @@ gradient_accumulation_steps=8
 # done
 
 # path="vectors/test_model_10"
-path="saves/finetune/tofu_Llama-3.2-1B-Instruct_forget10_NPO_relearn/checkpoint-2"
+path="/cnz/data/project/my-open-unlearning/saves/finetune/models--open-unlearning--tofu_Llama-2-7b-chat-hf_retain95/snapshots/ed9b32420dc4cf72b75ceb852d23b9d01a8e910a"
 
 for split in "${splits[@]}"; do
     forget_split=$(echo $split | cut -d' ' -f1)

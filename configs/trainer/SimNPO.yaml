@@ -6,6 +6,6 @@ method_args:
   delta: 0.0 # gamma in https://github.com/OPTML-Group/Unlearn-Simple/blob/main/TOFU/config/forget.yaml
   beta: 2.5
   alpha: 1.0
-  gamma: 0.125 # npo_coeff in https://github.com/OPTML-Group/Unlearn-Simple/blob/main/TOFU/config/forget.yaml
+  gamma: 0.1375 # npo_coeff in https://github.com/OPTML-Group/Unlearn-Simple/blob/main/TOFU/config/forget.yaml
   retain_loss_type: NLL
 

@@ -82,6 +82,47 @@ def get_model(model_cfg: DictConfig):
     tokenizer = get_tokenizer(tokenizer_args)
     return model, tokenizer
 
+def get_model_eval(model_cfg: DictConfig):
+    assert model_cfg is not None and model_cfg.model_args is not None, ValueError(
+        "Model config not found or model_args absent in configs/model."
+    )
+    model_args = model_cfg.model_args
+    tokenizer_args = model_cfg.tokenizer_args
+    torch_dtype = get_dtype(model_args)
+    model_handler = model_cfg.get("model_handler", "AutoModelForCausalLM")
+    model_cls = MODEL_REGISTRY[model_handler]
+    with open_dict(model_args):
+        model_path = model_args.pop("pretrained_model_name_or_path", None)
+    try:
+        print("model_args", hf_home)
+        # quant_config = BitsAndBytesConfig(
+        #     load_in_4bit=True,
+        #     bnb_4bit_use_double_quant=True,
+        #     bnb_4bit_quant_type="nf4",
+        #     bnb_4bit_compute_dtype=torch_dtype,
+        # )
+
+        # model = model_cls.from_pretrained(
+        #     pretrained_model_name_or_path=model_path,
+        #     torch_dtype=torch_dtype,
+        #     quantization_config=quant_config,
+        #     **model_args,
+        #     cache_dir=hf_home,
+        # )
+
+        model = model_cls.from_pretrained(
+            pretrained_model_name_or_path=model_path,
+            torch_dtype=torch_dtype,
+            **model_args,
+            cache_dir=hf_home,
+        )
+    except Exception as e:
+        logger.warning(f"Model {model_path} requested with {model_cfg.model_args}")
+        raise ValueError(
+            f"Error {e} while fetching model using {model_handler}.from_pretrained()."
+        )
+    tokenizer = get_tokenizer(tokenizer_args)
+    return model, tokenizer
 
 def _add_or_replace_eos_token(tokenizer, eos_token: str) -> None:
     is_added = tokenizer.eos_token_id is None

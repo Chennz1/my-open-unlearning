@@ -181,3 +181,9 @@ cython_debug/
 .idea/
 
 .vscode/
+
+*.png
+*.pdf
+*.pt
+*.md
+*.backup.*

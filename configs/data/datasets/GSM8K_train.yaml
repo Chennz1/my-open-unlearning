@@ -4,7 +4,7 @@ GSM8K_train:
     hf_args:
       path: "openai/gsm8k"
       name: "main"
-      split: "train"
+      split: "train[:4000]"
     question_key: "question"
     answer_key: "answer"
     max_length: 512

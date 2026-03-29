@@ -26,8 +26,9 @@ trainers=(
 # #################### MUSE Unlearning ####################
 # #########################################################
 
-# diy_path="saves/finetune/muse_Llama-2-7b-hf_News_forget"
-diy_path="vectors/muse_test-7b"
+diy_path="/cnz/data/project/my-open-unlearning/saves/unlearn/test_model_muse_7b_mlp"
+# diy_path="/cnz/data/ms-home/Llama-2-7b-hf/"
+# diy_path="/cnz/data/hf-home/hub/models--muse-bench--MUSE-news_target/snapshots/a2f39769e9a0b98ec1cdd12f65e9962502208935"
 # diy_path="/home/cnz/.cache/huggingface/hub/models--muse-bench--MUSE-news_target/snapshots/a2f39769e9a0b98ec1cdd12f65e9962502208935"
 
 for data_split in "${data_splits[@]}"; do
@@ -35,7 +36,7 @@ for data_split in "${data_splits[@]}"; do
 
         task_name=muse_${model}_${data_split}_${trainer}
 
-        CUDA_VISIBLE_DEVICES=1  python src/eval.py \
+        CUDA_VISIBLE_DEVICES=0  python src/eval.py \
         experiment=eval/muse/default.yaml \
         data_split=${data_split} \
         task_name=${task_name} \
