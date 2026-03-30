@@ -15,6 +15,8 @@ from trainer.unlearn.ceu import CEU
 from trainer.unlearn.satimp import SatImp
 from trainer.unlearn.wga import WGA
 from trainer.unlearn.pdu import PDU
+from trainer.unlearn.sku import SKU
+from trainer.unlearn.flat import FLAT
 
 from trainer.unlearn.null_space import NullSpace
 
@@ -101,5 +103,7 @@ _register_trainer(CEU)
 _register_trainer(SatImp)
 _register_trainer(WGA)
 _register_trainer(PDU)
+_register_trainer(SKU)
+_register_trainer(FLAT)
 
 _register_trainer(NullSpace)

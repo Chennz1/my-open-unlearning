@@ -1,0 +1,14 @@
+TOFU_QA_forget_flat:
+  handler: QAwithIdkDataset
+  args:
+    hf_args:
+      name: "forget10"
+      split: "train"
+      path: "locuslab/TOFU"
+    question_key: "question"
+    answer_key: "answer"
+    max_length: 512
+    # FLAT requires a template answer for the same forget question.
+    # On TOFU we use the shared IDK response pool by default.
+    idk_path: ./data/idk.jsonl
+    return_original: true

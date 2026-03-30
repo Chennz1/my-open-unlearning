@@ -1,0 +1,11 @@
+defaults:
+  - finetune
+
+handler: SKU
+method_args:
+  gamma: 1.0
+  alpha: 1.0
+  beta: 1.0
+  random_answer_k: 1
+  random_answer_source: forget
+  retain_loss_type: KL
