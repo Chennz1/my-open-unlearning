@@ -18,9 +18,10 @@ trainers_experiments=(
     # "DPO unlearn/tofu/idk.yaml"
     # "RMU  unlearn/tofu/default.yaml"
     # "SatImp  unlearn/tofu/default.yaml"
+    "WGA  unlearn/tofu/default.yaml"
     # "NullSpace unlearn/tofu/default.yaml"
     # "SKU unlearn/tofu/sku.yaml"
-    "FLAT unlearn/tofu/flat.yaml"
+    # "FLAT unlearn/tofu/flat.yaml"
 )
 splits=(
     # "forget01 holdout01 retain99"
@@ -30,7 +31,7 @@ splits=(
 
 
 per_device_train_batch_size=4 # on two gpus would make effective batch size 32
-gradient_accumulation_steps=4
+gradient_accumulation_steps=2
 epoch=5
 
 
@@ -49,7 +50,7 @@ for split in "${splits[@]}"; do
             trainer=$(echo $trainer_experiment | cut -d' ' -f1)
             experiment=$(echo $trainer_experiment | cut -d' ' -f2)
             
-            task_name=tofu_${model}_${forget_split}_${trainer}_32_epoch${epoch}
+            task_name=tofu_${model}_${forget_split}_${trainer}_epoch${epoch}
             model_path=open-unlearning/tofu_${model}_full
             echo ${task_name}: Unlearning ${model_path} using ${trainer}
 
@@ -70,7 +71,8 @@ for split in "${splits[@]}"; do
             trainer.args.gradient_checkpointing=true  \
             trainer.args.num_train_epochs=${epoch} \
             trainer.args.save_strategy="no" \
-
+            # trainer.args.save_steps=0.5 
+            # trainer.args.save_steps=24 \
 
             # Eval
             CUDA_VISIBLE_DEVICES=1 python src/eval.py \

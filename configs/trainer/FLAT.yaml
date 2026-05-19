@@ -1,0 +1,9 @@
+defaults:
+  - finetune
+
+handler: FLAT
+method_args:
+  # Public FLAT repo exposes this as `variants`.
+  divergence: Total-Variation
+  # Kept for extensibility; default reproduces the standard FLAT weighting.
+  template_weight: 1.0

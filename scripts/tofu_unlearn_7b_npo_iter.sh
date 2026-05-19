@@ -11,7 +11,7 @@ models=(
     # "Llama-3.1-8B-Instruct"
 )
 trainers_experiments=(
-    # "NPO unlearn/tofu/default.yaml"
+    "NPO unlearn/tofu/default.yaml"
     # "GradDiff unlearn/tofu/default.yaml"
     # "GradAscent unlearn/tofu/default.yaml"
     # "SimNPO unlearn/tofu/default.yaml"
@@ -19,18 +19,16 @@ trainers_experiments=(
     # "RMU  unlearn/tofu/default.yaml"
     # "SatImp  unlearn/tofu/default.yaml"
     # "NullSpace unlearn/tofu/default.yaml"
-    # "SKU unlearn/tofu/sku.yaml"
-    "FLAT unlearn/tofu/flat.yaml"
 )
 splits=(
     # "forget01 holdout01 retain99"
-    "forget05 holdout05 retain95"
+    # "forget05 holdout05 retain95"
     "forget10 holdout10 retain90"
 )
 
 
 per_device_train_batch_size=4 # on two gpus would make effective batch size 32
-gradient_accumulation_steps=4
+gradient_accumulation_steps=2
 epoch=5
 
 
@@ -49,21 +47,47 @@ for split in "${splits[@]}"; do
             trainer=$(echo $trainer_experiment | cut -d' ' -f1)
             experiment=$(echo $trainer_experiment | cut -d' ' -f2)
             
-            task_name=tofu_${model}_${forget_split}_${trainer}_32_epoch${epoch}
+            task_name1=tofu_${model}_${forget_split}_${trainer}_beta0.2_gamma0.2_iter1_epoch${epoch}
+            task_name2=tofu_${model}_${forget_split}_${trainer}_beta0.2_gamma0.2_iter2_epoch${epoch}
             model_path=open-unlearning/tofu_${model}_full
-            echo ${task_name}: Unlearning ${model_path} using ${trainer}
+            echo ${task_name1}: Unlearning ${model_path} using ${trainer}
 
             # Unlearn
             CUDA_VISIBLE_DEVICES=0,1 accelerate launch --config_file configs/accelerate/default_config.yaml --main_process_port $MASTER_PORT \
             src/train.py --config-name=unlearn.yaml \
             experiment=${experiment} \
             trainer=${trainer} \
-            task_name=${task_name} \
+            task_name=${task_name1} \
             model=${model} \
             forget_split=${forget_split} \
             retain_split=${retain_split} \
             model.model_args.pretrained_model_name_or_path=/cnz/data/project/my-open-unlearning/saves/finetune/tofu_Llama-2-7b-chat-hf_full \
             retain_logs_path=saves/eval/tofu_${model}_${retain_split}/TOFU_EVAL.json \
+            trainer.method_args.beta=0.2 \
+            trainer.method_args.gamma=0.2 \
+            data.forget.TOFU_QA_forget.args.hf_args.split="train\[:50%\]" \
+            trainer.args.per_device_train_batch_size=$per_device_train_batch_size \
+            trainer.args.gradient_accumulation_steps=$gradient_accumulation_steps \
+            trainer.args.ddp_find_unused_parameters=true \
+            trainer.args.gradient_checkpointing=true  \
+            trainer.args.num_train_epochs=${epoch} \
+            trainer.args.save_strategy="no" \
+            # trainer.args.save_steps=0.5 
+            # trainer.args.save_steps=24 \
+
+            CUDA_VISIBLE_DEVICES=0,1 accelerate launch --config_file configs/accelerate/default_config.yaml --main_process_port $MASTER_PORT \
+            src/train.py --config-name=unlearn.yaml \
+            experiment=${experiment} \
+            trainer=${trainer} \
+            task_name=${task_name2} \
+            model=${model} \
+            forget_split=${forget_split} \
+            retain_split=${retain_split} \
+            model.model_args.pretrained_model_name_or_path=/cnz/data/project/my-open-unlearning/saves/unlearn/${task_name1} \
+            retain_logs_path=saves/eval/tofu_${model}_${retain_split}/TOFU_EVAL.json \
+            trainer.method_args.beta=0.2 \
+            trainer.method_args.gamma=0.2 \
+            data.forget.TOFU_QA_forget.args.hf_args.split="train\[50%:\]" \
             trainer.args.per_device_train_batch_size=$per_device_train_batch_size \
             trainer.args.gradient_accumulation_steps=$gradient_accumulation_steps \
             trainer.args.ddp_find_unused_parameters=true \
@@ -71,16 +95,15 @@ for split in "${splits[@]}"; do
             trainer.args.num_train_epochs=${epoch} \
             trainer.args.save_strategy="no" \
 
-
             # Eval
             CUDA_VISIBLE_DEVICES=1 python src/eval.py \
             experiment=eval/tofu/default.yaml \
             forget_split=${forget_split} \
             holdout_split=${holdout_split} \
             model=${model} \
-            task_name=${task_name} \
-            model.model_args.pretrained_model_name_or_path=saves/unlearn/${task_name} \
-            paths.output_dir=saves/unlearn/${task_name}/evals \
+            task_name=${task_name2} \
+            model.model_args.pretrained_model_name_or_path=saves/unlearn/${task_name2} \
+            paths.output_dir=saves/unlearn/${task_name2}/evals \
             retain_logs_path=saves/eval/tofu_${model}_${retain_split}/TOFU_EVAL.json
         done
     done

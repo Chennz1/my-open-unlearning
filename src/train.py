@@ -1,4 +1,6 @@
 import hydra
+import time
+import os
 from omegaconf import DictConfig
 from data import get_data, get_collators
 from model import get_model
@@ -68,7 +70,16 @@ def main(cfg: DictConfig):
     # print(mode)
 
     if trainer_args.do_train:
+        start_time = time.time()
         trainer.train()
+        end_time = time.time()
+        elapsed_time = end_time - start_time
+        print(f"Training completed in {elapsed_time:.2f} seconds.")
+        
+        os.makedirs(trainer_args.output_dir, exist_ok=True)
+        with open(os.path.join(trainer_args.output_dir, "training_time.log"), "w") as f:
+            f.write(f"Training completed in {elapsed_time:.2f} seconds.\n")
+            
         trainer.save_state()
         trainer.save_model(trainer_args.output_dir)
 

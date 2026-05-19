@@ -65,7 +65,7 @@ gradient_accumulation_steps=8
 # done
 
 # path="vectors/test_model_10"
-path="/cnz/data/project/my-open-unlearning/saves/finetune/models--open-unlearning--tofu_Llama-2-7b-chat-hf_retain95/snapshots/ed9b32420dc4cf72b75ceb852d23b9d01a8e910a"
+path="/cnz/data/project/my-open-unlearning/saves/unlearn/tv_sku_forget10_Llama-2-7b-chat-hf"
 
 for split in "${splits[@]}"; do
     forget_split=$(echo $split | cut -d' ' -f1)

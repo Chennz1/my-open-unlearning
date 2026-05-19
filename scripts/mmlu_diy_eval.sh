@@ -3,8 +3,7 @@
 # 强制使用本地缓存，避免联网查找数据集
 export HF_DATASETS_OFFLINE=1
 # 确保 datasets 库查找用户指定位置的缓存 (对应用户提供的 ~/.cache/huggingface/hub/...)
-export HF_HOME=$HOME/.cache/huggingface
-
+export HF_HOME=/cnz/data/hf-home/hub/
 # 自动获取一个空闲端口 (保留原脚本逻辑)
 export MASTER_PORT=$(python -c "import socket; s=socket.socket(); s.bind(('', 0)); print(s.getsockname()[1]); s.close()")
 echo "Master Port: $MASTER_PORT"
@@ -16,7 +15,7 @@ models=(
 
 # 指定模型权重的具体路径
 # 这里使用了你脚本中示例的路径，可以根据需要修改为变量或循环
-path="/cnz/data/project/my-open-unlearning/saves/unlearn/tofu_Llama-2-7b-chat-hf_forget10_NPO_beta0.2_gamma0.2_epoch5"
+path="/cnz/data/ms-home/Llama-2-7b-chat-hf"
 
 for model in "${models[@]}"; do
     task_name="mmlu_${model}" # 给任务起个名字，方便日志区分

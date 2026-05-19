@@ -22,8 +22,8 @@ trainers_experiments=(
 )
 splits=(
     # "forget01 holdout01 retain99"
-    # "forget05 holdout05 retain95"
-    "forget10 holdout10 retain90"
+    "forget05 holdout05 retain95"
+    # "forget10 holdout10 retain90"
 )
 
 
