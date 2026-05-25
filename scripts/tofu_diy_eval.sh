@@ -9,7 +9,7 @@ models=(
     # "Llama-3.2-1B-Instruct"
     # "Llama-3.2-3B-Instruct"
     # "Llama-3.1-8B-Instruct"
-    "Llama-2-7b-chat-hf"
+    "${EVAL_MODEL:-Llama-2-7b-chat-hf}"
 )
 trainers_experiments=(
     # "GradAscent unlearn/tofu/default.yaml"
@@ -24,7 +24,7 @@ trainers_experiments=(
 splits=(
     # "forget01 holdout01 retain99"
     # "forget05 holdout05 retain95"
-    "forget10 holdout10 retain90"
+    "${EVAL_FORGET_SPLIT:-forget10} ${EVAL_HOLDOUT_SPLIT:-holdout10} ${EVAL_RETAIN_SPLIT:-retain90}"
 )
 
 
@@ -65,7 +65,9 @@ gradient_accumulation_steps=8
 # done
 
 # path="vectors/test_model_10"
-path="/cnz/data/project/my-open-unlearning/saves/unlearn/tv_sku_forget10_Llama-2-7b-chat-hf"
+path="${EVAL_MODEL_PATH:-/cnz/data/project/my-open-unlearning/saves/unlearn/tv_sku_forget10_Llama-2-7b-chat-hf}"
+output_dir="${EVAL_OUTPUT_DIR:-${path}/evals}"
+eval_device="${EVAL_DEVICE:-0}"
 
 for split in "${splits[@]}"; do
     forget_split=$(echo $split | cut -d' ' -f1)
@@ -77,18 +79,18 @@ for split in "${splits[@]}"; do
             trainer=$(echo $trainer_experiment | cut -d' ' -f1)
             experiment=$(echo $trainer_experiment | cut -d' ' -f2)
             
-            task_name=tofu_${model}_${forget_split}_${trainer} 
+            task_name=${EVAL_TASK_NAME:-tofu_${model}_${forget_split}_${trainer}}
             model_path=open-unlearning/tofu_${model}_full
 
             # Eval
-            CUDA_VISIBLE_DEVICES=0 python src/eval.py \
+            CUDA_VISIBLE_DEVICES=${eval_device} python src/eval.py \
             experiment=eval/tofu/default.yaml \
             forget_split=${forget_split} \
             holdout_split=${holdout_split} \
             model=${model} \
             task_name=${task_name} \
             model.model_args.pretrained_model_name_or_path=${path} \
-            paths.output_dir=${path}/evals \
+            paths.output_dir=${output_dir} \
             retain_logs_path=saves/eval/tofu_${model}_${retain_split}/TOFU_EVAL.json
         done
     done

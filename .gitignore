@@ -185,6 +185,6 @@ cython_debug/
 *.png
 *.pdf
 *.pt
-*.md
+# *.md
 *.backup.*
 *.ipynb
